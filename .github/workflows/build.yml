@@ -12,9 +12,16 @@ jobs:
         run: |
           mkdir -p Payload/NeonSudoku.app
           
+          SWIFT_FILE=$(find . -name "ContentView.swift" -print -quit)
+          
+          if [ -z "$SWIFT_FILE" ]; then
+            echo "Error: ContentView.swift not found!"
+            exit 1
+          fi
+          
           xcrun swiftc -sdk $(xcrun --sdk iphoneos --show-sdk-path) \
             -target arm64-apple-ios15.0 \
-            ContentView.swift \
+            "$SWIFT_FILE" \
             -o Payload/NeonSudoku.app/NeonSudoku
             
           cat << 'EOF' > Payload/NeonSudoku.app/Info.plist
